@@ -20,7 +20,7 @@
 
   // String list of Restaurant titles - so Restaurants aren't marked twice.
   var markedRestaurants = [];
-  
+
   /**
    * Mark Resaurants based on the current Recommended Dishes displayed to the User.
    */
@@ -100,6 +100,33 @@
 
   Menyou.Map.initialize = function() {
 
+    // Make the radius buttons visible.
+    $(".radius-input").iCheck({
+      checkboxClass: 'icheckbox_square-green',
+      radioClass: 'iradio_square-green',
+      ifChecked: function() {
+        console.log("Here");
+      }
+    });
+
+    var METERS_IN_MILE = 1609;
+    $('#one-mile').on("ifChecked", function() {
+      Menyou.state.location.radius = METERS_IN_MILE;
+      $("#recommend-btn").show();
+    });
+    $('#three-mile').on("ifChecked", function() {
+      Menyou.state.location.radius = 3 * METERS_IN_MILE;
+      $("#recommend-btn").show();
+    });
+    $('#five-mile').on("ifChecked", function() {
+      Menyou.state.location.radius = 5 * METERS_IN_MILE;
+      $("#recommend-btn").show();
+    });
+    $('#ten-mile').on("ifChecked", function() {
+      Menyou.state.location.radius = 10 * METERS_IN_MILE;
+      $("#recommend-btn").show();
+    });
+
     //reset list of markers
     markers = [];
 
@@ -109,10 +136,27 @@
       lng: Menyou.state.location.lon
     }
 
+    var radius_miles = Menyou.state.location.radius / METERS_IN_MILE;
+
+    var zoom_level = 14;
+    if (radius_miles < 1.1) {
+      zoom_level = 14;
+      $("#one-mile").iCheck("check");
+    } else if (radius_miles < 3.1) {
+      zoom_level = 12;
+      $("#three-mile").iCheck("check");
+    } else if (radius_miles < 5.1) {
+      zoom_level = 11;
+      $("#five-mile").iCheck("check");
+    } else if (radius_miles < 10.1) {
+      zoom_level = 10;
+      $("#ten-mile").iCheck("check");
+    }
+
     //initial map options
     mapOptions = {
             center: current_position,
-            zoom: 14,
+            zoom: zoom_level,
             disableDefaultUI: true
     };
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);

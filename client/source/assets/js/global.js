@@ -23,7 +23,7 @@ Menyou = {};
     location: {
       lat: 42.358638, // MIT is default location.
       lon: -71.093345,
-      radius: 1500, // in meters
+      radius: 1609, // in meters
       city: 'Cambridge, MA'
     }
   };
